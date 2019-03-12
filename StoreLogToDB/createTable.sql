@@ -46,7 +46,7 @@ create table appTable
 		numberOfTask					varchar(20),
 		numberOfStage					varchar(20),
 		numberOfJob						varchar(20),
-		
+		inputDataSize					varchar(20),	
 
 		diskBytesSpilledMax				varchar(20),
 		executorRuntimeMax				varchar(20),
