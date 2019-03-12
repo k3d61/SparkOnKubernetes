@@ -1,0 +1,49 @@
+  {
+    spark-bench-jar = "local:///opt/spark-bench/lib/spark-bench-2.3.0_0.4.0-RELEASE.jar"
+    spark-args = {
+      "master" = "k8s://https://10.129.26.48:6443"
+      "deploy-mode"= "cluster"
+      "jars"="hdfs://10.129.2.179:8020/jars/*,hdfs://10.129.2.179:8020/jars/dependency/*"
+    # "files"="hdfs://10.129.2.179:8020/misc/metrics.properties"    
+      }
+    conf = {
+        "spark.driver.cores" = "@@spark_driver_cores@@"
+        "spark.driver.memory" = "@@spark_driver_memory@@"
+        "spark.executor.memory" = "@@spark_executor_memory@@"
+        "spark.reducer.maxSizeInFlight" = "@@spark_reducer_maxSizeInFlight@@"
+        "spark.shuffle.compress" = "@@spark_shuffle_compress@@"
+        "spark.shuffle.file.buffer" = "@@spark_shuffle_file_buffer@@"
+        "spark.shuffle.spill.compress" = "@@spark_shuffle_spill_compress@@"
+        "spark.io.compression.codec" = "@@spark_io_compression_codec@@"
+        "spark.rdd.compress" = "@@spark_rdd_compress@@"
+        "spark.memory.fraction" = "@@spark_memory_fraction@@"
+        "spark.executor.cores" = "@@spark_executor_cores@@"
+        "spark.default.parallelism" = "@@spark_default_parallelism@@"
+        "spark.locality.wait" = "@@spark_locality_wait@@"
+        "spark.task.cpus" = "@@spark_task_cpus@@"
+        "spark.executor.instances" = "@@spark_executor_instances@@"
+        "spark.memory.storageFraction" = "@@spark_memory_storageFraction@@"
+   
+      # "spark.metrics.properties"="metrics.properties" 
+        "spark.extraListeners" = "com.qubole.sparklens.QuboleJobListener"
+        "spark.kubernetes.container.image"= "sapantanted/sparkrnd:spark-bench"
+        "spark.kubernetes.authenticate.driver.serviceAccountName" = "spark"
+        "spark.kubernetes.namespace" = "default"
+        "spark.kubernetes.driver.pod.name"="@@ALGO@@-@@PERSON@@-@@RUNID@@"
+        "spark.sparklens.data.dir" = "hdfs://10.129.2.179:8020/logs/@@ALGO@@/@@PERSON@@/@@RUNID@@/sparklens/"
+    }
+    suites-parallel = false
+    workload-suites = [
+      {
+        benchmark-output = "hdfs://10.129.2.179:8020/logs/@@ALGO@@/@@PERSON@@/@@RUNID@@/benchmark-output.csv"
+        parallel = false
+        save-mode="overwrite"
+        workloads = [
+     	   {
+             name="kmeans"
+             "input" = "hdfs://10.129.2.179:8020/input-data/datagen/kmeans-data-5.csv"
+          }
+        ]
+      }
+    ]
+   }
