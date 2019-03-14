@@ -1,7 +1,7 @@
   {
     spark-bench-jar = "local:///opt/spark-bench/lib/spark-bench-2.3.0_0.4.0-RELEASE.jar"
     spark-args = {
-      "master" = "k8s://https://10.129.6.12:6443"
+      "master" = "k8s://https://10.129.26.48:6443"
       "deploy-mode"= "cluster"
       "jars"="hdfs://10.129.2.179:8020/jars/*,hdfs://10.129.2.179:8020/jars/dependency/*"
     # "files"="hdfs://10.129.2.179:8020/misc/metrics.properties"    
@@ -41,7 +41,7 @@
         workloads = [
      	   {
              name="kmeans"
-             "input" = "hdfs://10.129.2.179:8020/input-data/kmeans/kmeans-data-8gb.csv"
+             "input" = "hdfs://10.129.2.179:8020/input-data/datagen/kmeans-data-5.csv"
           }
         ]
       }

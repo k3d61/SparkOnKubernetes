@@ -6,12 +6,14 @@ import csv
 
 if len(sys.argv) != 4:
 	print("Usage: ./simplifier.py <LogFile> <JsonFile> <CsvFile>")
+	print("test")
+	
 	exit()
 
 LogFile = sys.argv[1]
 JsonFile = sys.argv[2]
 CsvFile = sys.argv[3]
-
+input_data_size = ""
 
 lines = [line.rstrip('\n') for line in open(LogFile)]
 with open(JsonFile , encoding='utf-8') as jsonFile:
@@ -101,7 +103,8 @@ with open(CsvFile) as csvfile:
 			sparkExecutorInstances = values[i]
 		elif names[i]=="spark.memory.storageFraction":
 			sparkMemoryStorageFraction = values[i]
-
+		elif names[i]=="input":
+			input_file_size = values[i].split('/')[-1].split('-')[-1].split('gb')[0]
 
 
 
@@ -215,6 +218,7 @@ print("insert into appTable values ('"
 	+ str(TotalTaskCount) + "','" 
 	+ str(StageCount) + "','" 
 	+ str(JobCount) + "','" 
+	+ input_file_size + "','"
 	
 	+ metrics[0] + "','" 
 	+ metrics[2] + "','" 

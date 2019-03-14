@@ -40,8 +40,10 @@
         save-mode="overwrite"
         workloads = [
      	   {
-             name="kmeans"
-             "input" = "hdfs://10.129.2.179:8020/input-data/kmeans/kmeans-data-8gb.csv"
+     	   	"name" = "custom"
+			"class" = "com.sapan.sparkbench.workload.pagerank.PageRank"
+			"inputdatafile" = "hdfs://10.129.2.179:8020/input-data/PageRank/PageRank3.txt"
+			"numiterations" = "10"
           }
         ]
       }
