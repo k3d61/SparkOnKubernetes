@@ -29,13 +29,13 @@ do
 
         test -e $benchMarkFilePath
         if [ $? -ne 0 ]; then
-                echo "file does not exist"      
+                #echo "file does not exist"      
                 continue
         fi
 
-        #echo $benchMarkFilePath
-        #echo $jsonFilePath
-        #echo $txtFilePath
+        echo $benchMarkFilePath
+        echo $jsonFilePath
+        echo $txtFilePath
 
         #Usage: ./simplifier.py <LogFile> <JsonFile> <CsvFile>
         ./simplifier.py $txtFilePath $jsonFilePath $benchMarkFilePath > insertQueries.sql
