@@ -73,7 +73,7 @@ with open(CsvFile) as csvfile:
 			sparkDriverCores = values[i]
 		elif names[i]=="spark.driver.memory":
 			sparkDriverMemory = values[i]
-		elif names[i]=="spark.app.name":
+		elif names[i]=="name":
 			appName = values[i]
 		elif names[i]=="spark.executor.memory":
 			sparkExecutorMemory = values[i]

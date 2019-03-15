@@ -39,7 +39,7 @@ spark_task_cpus = ['1']
 spark_executor_instances = ['2', '4', '8']
 spark_memory_storageFraction = ['0.3', '0.5']
 
-while i < range(noOfSamples):
+for i in range(noOfSamples):
 	temp = []
 
 	# spark.driver.cores
@@ -91,7 +91,6 @@ while i < range(noOfSamples):
 	get_value(vec, i , 15, spark_memory_storageFraction, temp)
 
 
-	i = i + 1
 	ans.append(temp)
 
 print(ans)
