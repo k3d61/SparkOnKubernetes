@@ -2,6 +2,16 @@ import sys
 import sobol_seq
 import csv
 
+def get_value(vec,i,j,array,temp):
+	array_len = len(array)
+	index = 0
+	while (index < array_len):
+		if(vec[i][j] < (index+1.0)/array_len):
+			temp.append(array[index])
+			return
+		index = index + 1
+	return
+
 if len(sys.argv) != 2:
 	print("Usage: ./sampler.py <noOfSamples>")
 	exit()
@@ -12,84 +22,74 @@ noOfParameters = 16
 vec = sobol_seq.i4_sobol_generate(noOfParameters, noOfSamples)
 ans = []
 
+spark_driver_cores = [1, 2, 4]
+spark_driver_memory = ['1g', '2g', '4g'] 
+spark_executor_memory = ['1g', '2g', '4g', '8g']
+spark_reducer_maxSizeInFlight = ['48m']
+spark_shuffle_compress = ['true', 'false']
+spark_shuffle_file_buffer = ['64k'] # '32k' 
+spark_shuffle_spill_compress = ['true']  
+spark_io_compression_codec = ['lz4'] # 'snappy', 'lzf', 'lzstd'
+spark_rdd_compress = ['false']
+spark_memory_fraction = ['0.6']
+spark_executor_cores = ['1', '2', '4']
+spark_default_parallelism = ['16', '64', '128', '256']
+spark_locality_wait = ['3s']
+spark_task_cpus = ['1']
+spark_executor_instances = ['2', '4', '8']
+spark_memory_storageFraction = ['0.3', '0.5']
+
 while i < range(noOfSamples):
 	temp = []
 
 	# spark.driver.cores
-	if(vec[i][0]<1.0/3): temp.append(1)
-	elif(vec[i][0]<2.0/3): temp.append(2)
-	else: temp.append(4)
+	get_value(vec, i , 0, spark_driver_cores, temp)
 
 	# spark.driver.memory
-	if(vec[i][1]<1.0/2): temp.append('1g')
-	else: temp.append('2g')
+	get_value(vec, i , 1, spark_driver_memory, temp)
 
 	# spark.executor.memory
-	if(vec[i][2]<1.0/4): temp.append('1g')
-	elif(vec[i][2]<2.0/4): temp.append('2g')
-	elif(vec[i][2]<3.0/4): temp.append('4g')
-	else: temp.append('8g')
-
+	get_value(vec, i , 2, spark_executor_memory, temp)
+	
 	# spark.reducer.maxSizeInFlight
-	temp.append('48m')
+	get_value(vec, i , 3, spark_reducer_maxSizeInFlight, temp)
 
 	# spark.shuffle.compress
-	if(vec[i][4]<1.0/2): temp.append('true')
-	else: temp.append('false')
+	get_value(vec, i , 4, spark_shuffle_compress, temp)
 
 	# spark.shuffle.file.buffer
-	if(vec[i][5]<1.0/3): temp.append('32k')
-	elif(vec[i][5]<2.0/3): temp.append('64k')
-	else: temp.append('128k')
+	get_value(vec, i , 5, spark_shuffle_file_buffer, temp)
 
 	# spark.shuffle.spill.compress
-	if(vec[i][6]<1.0/2): temp.append('true')
-	else: temp.append('false')
+	get_value(vec, i , 6, spark_shuffle_spill_compress, temp)
 
 	# spark.io.compression.codec
-	if(vec[i][7]<1.0/4): temp.append('lz4')
-	elif(vec[i][7]<2.0/4): temp.append('snappy')
-	elif(vec[i][7]<3.0/4): temp.append('lzf')
-	else: temp.append('zstd')
+	get_value(vec, i , 7, spark_io_compression_codec, temp)	
 
 	# spark.rdd.compress
-	if(vec[i][8]<1.0/2): temp.append('false')
-	else: temp.append('true')
+	get_value(vec, i , 8, spark_rdd_compress, temp)
 
 	# spark.memory.fraction
-	if(vec[i][9]<1.0/3): temp.append(0.4)
-	elif(vec[i][9]<2.0/3): temp.append(0.6)
-	else: temp.append(0.8)
+	get_value(vec, i , 9, spark_memory_fraction, temp)
 
 	# spark.executor.cores
-	if(vec[i][10]<1.0/3): temp.append(1)
-	elif(vec[i][10]<2.0/3): temp.append(2)
-	else: temp.append(4)
+	get_value(vec, i , 10, spark_executor_cores, temp)
 
 	# spark.default.parallelism
-	if(vec[i][11]<1.0/4): temp.append(16)
-	elif(vec[i][11]<2.0/4): temp.append(64)
-	elif(vec[i][11]<3.0/4): temp.append(128)
-	else: temp.append(256)
+	get_value(vec, i , 11, spark_default_parallelism, temp)
 
 	# spark.locality.wait
-	temp.append('3s')
+	get_value(vec, i , 12, spark_locality_wait, temp)
 
 	# spark.task.cpus
-	if(vec[i][13]<1.0/2): temp.append(1)
-	else: temp.append(2)
+	get_value(vec, i , 13, spark_task_cpus, temp)
 
 	# spark.executor.instances
-	if(vec[i][14]<1.0/3): temp.append(2)
-	elif(vec[i][14]<2.0/3): temp.append(4)
-	else: temp.append(8)
+	get_value(vec, i , 14, spark_executor_instances, temp)
 
 	# spark.memory.storageFraction
-	if(vec[i][15]<1.0/3): temp.append(0.3)
-	elif(vec[i][15]<2.0/3): temp.append(0.5)
-	else: temp.append(0.7)
+	get_value(vec, i , 15, spark_memory_storageFraction, temp)
 
-	if 
 
 	i = i + 1
 	ans.append(temp)
