@@ -3,8 +3,8 @@ USAGE=$(top -b -n2 -p 1 | fgrep "Cpu(s)" | tail -1 | awk -F'id,' -v prefix="$pre
 USAGE="${USAGE//%}"
 
 
-MEMORY_TOTAL=$(free -m | grep Mem | cut -d " " -f12)
-MEMORY_USED=$(free -m | grep Mem | cut -d " " -f20)
+MEMORY_TOTAL=$(free -m | awk -F' ' '{ print $2 }' | sed -n 2p)
+MEMORY_USED=$(free -m | awk -F' ' '{ print $3 }' | sed -n 2p)
 
 
 echo "$USAGE--$HOSTNAME" >> /tmp/resourceMonitorLog
