@@ -3,4 +3,8 @@ USAGE=$(top -b -n2 -p 1 | fgrep "Cpu(s)" | tail -1 | awk -F'id,' -v prefix="$pre
 USAGE="${USAGE//%}"
 echo "$USAGE--$HOSTNAME"
 echo "usage=$USAGE&&hostname=$HOSTNAME"
-curl --request POST --data "usage=$USAGE&&hostname=$HOSTNAME" http://10.16.23.143:8080/resourceMonitor/myresource
+
+MEMORY_TOTAL=$(free -m | grep Mem | cut -d " " -f9)
+MEMORY_USED=$(free -m | grep Mem | cut -d " " -f14)
+
+curl --request POST --data "usage=$USAGE&&hostname=$HOSTNAME&&memtotal=$MEMORY_TOTAL&&memused=$MEMORY_USED" http://10.16.23.143:8080/resourceMonitor/myresource
