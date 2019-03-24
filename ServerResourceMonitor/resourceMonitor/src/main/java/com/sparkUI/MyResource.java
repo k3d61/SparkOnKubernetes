@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -64,7 +65,10 @@ public class MyResource {
 
         String headFilePath = "HTML/header.html";
         String endFilePath = "HTML/end.html";
-        String content = "<br>";
+        String content = "";
+
+        content += x.date + "<br>";
+
 
         Iterator it = x.ALLHosts.entrySet().iterator();
         //content = x.ALLHosts.toString();
@@ -79,8 +83,8 @@ public class MyResource {
                 "<div class=\"row collection-item\">" +
                 "<div class=\"col s3\">Hostname</div>"+
                 "<div class=\"col s3\">CPU Utilazation </div>"+
-                "<div class=\"col s3\">Total Memory</div>"+
-                "<div class=\"col s3\">Used Memory</div>"+
+                "<div class=\"col s3\">Total Memory(MB)</div>"+
+                "<div class=\"col s3\">Used Memory(MB)</div>"+
                 "</div>" ;
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
@@ -89,19 +93,17 @@ public class MyResource {
             String values = pair.getValue().toString();
             String hostname = pair.getKey().toString();
 
-            
+
             String CPUUtilazation = values.split("@")[0];
             String MemTotal = values.split("@")[1];
             String MemUsed = values.split("@")[2];
 
             content = content +
                     "<div class=\"row collection-item\">" +
-                    "<div class=\"col s3\">"+ values+"</div>"+
-/*
+                    "<div class=\"col s3\">"+ hostname+"</div>"+
                     "<div class=\"col s3\">"+ CPUUtilazation +"</div>"+
                     "<div class=\"col s3\">"+ MemTotal +"</div>"+
                     "<div class=\"col s3\">"+ MemUsed +"</div>"+
-*/
                     "</div>" ;
         }
 
@@ -119,13 +121,14 @@ public class MyResource {
     public String getCPUUasge(@FormParam("usage") String CPUusage,
                               @FormParam("hostname") String HostName,
                               @FormParam("memtotal")String MemTotal,
-                              @FormParam("memused")String MemUsed){
+                              @FormParam("memused")String MemUsed,
+                              @FormParam("date")String date){
         System.out.println("in POST = " + CPUusage);
 
         Singleton x = Singleton.getInstance();
         x.CPUusage = CPUusage;
         x.HostName = HostName;
-
+        x.date = date;
         x.ALLHosts.put(HostName,CPUusage+"@"+MemTotal+"@"+MemUsed);
 
 
@@ -141,6 +144,7 @@ class Singleton
     // variable of type String
     public String HostName;
     public String CPUusage;
+    public String date;
 
     Map<String, String> ALLHosts = new HashMap<>();
 

@@ -5,13 +5,13 @@ USAGE="${USAGE//%}"
 
 MEMORY_TOTAL=$(free -m | awk -F' ' '{ print $2 }' | sed -n 2p)
 MEMORY_USED=$(free -m | awk -F' ' '{ print $3 }' | sed -n 2p)
-
+DATE=$(date)
 
 echo "$USAGE--$HOSTNAME" >> /tmp/resourceMonitorLog
 
-echo "usage=$USAGE&&hostname=$HOSTNAME&&memtotal=$MEMORY_TOTAL&&memused=$MEMORY_USED"  >> /tmp/resourceMonitorLog
+echo "usage=$USAGE&&hostname=$HOSTNAME&&memtotal=$MEMORY_TOTAL&&memused=$MEMORY_USED&&date=$DATE"  >> /tmp/resourceMonitorLog
 
-curl --request POST --data "usage=$USAGE&&hostname=$HOSTNAME&&memtotal=$MEMORY_TOTAL&&memused=$MEMORY_USED" http://10.16.23.143:8080/resourceMonitor/myresource
+curl --request POST --data "usage=$USAGE&&hostname=$HOSTNAME&&memtotal=$MEMORY_TOTAL&&memused=$MEMORY_USED&&date=$DATE" http://10.16.23.143:8080/resourceMonitor/myresource
 
 
 echo "" >> /tmp/resourceMonitorLog
