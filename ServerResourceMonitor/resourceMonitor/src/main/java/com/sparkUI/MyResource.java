@@ -88,21 +88,21 @@ public class MyResource {
 
             String values = pair.getValue().toString();
             String hostname = pair.getKey().toString();
+
+            
             String CPUUtilazation = values.split("@")[0];
             String MemTotal = values.split("@")[1];
             String MemUsed = values.split("@")[2];
 
             content = content +
                     "<div class=\"row collection-item\">" +
-                    "<div class=\"col s3\">"+ hostname+"</div>"+
+                    "<div class=\"col s3\">"+ values+"</div>"+
+/*
                     "<div class=\"col s3\">"+ CPUUtilazation +"</div>"+
                     "<div class=\"col s3\">"+ MemTotal +"</div>"+
                     "<div class=\"col s3\">"+ MemUsed +"</div>"+
+*/
                     "</div>" ;
- //                   "<span class='badge'>" + hostname +"</span>"+ CPUUtilazation ;
-
-//            content = content + "<a href=\"#!\" class=\"collection-item\"><span class=\"badge\">" + pair.getValue() +"</span>"+ pair.getKey() + "</a>";
-            //content = content + pair.getKey() + " = " + pair.getValue() + "<br>";
         }
 
         content = content + "</div>";
