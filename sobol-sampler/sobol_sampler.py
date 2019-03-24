@@ -1,8 +1,16 @@
-#!/usr/bin/env python3
-
 import sys
 import sobol_seq
 import csv
+
+def get_value(vec,i,j,array,temp):
+	array_len = len(array)
+	index = 0
+	while (index < array_len):
+		if(vec[i][j] < (index+1.0)/array_len):
+			temp.append(array[index])
+			return
+		index = index + 1
+	return
 
 if len(sys.argv) != 2:
 	print("Usage: ./sampler.py <noOfSamples>")
@@ -14,66 +22,74 @@ noOfParameters = 16
 vec = sobol_seq.i4_sobol_generate(noOfParameters, noOfSamples)
 ans = []
 
+spark_driver_cores = [1, 2, 4]
+spark_driver_memory = ['1g', '2g', '4g'] 
+spark_executor_memory = ['1g', '2g', '4g', '8g']
+spark_reducer_maxSizeInFlight = ['48m']
+spark_shuffle_compress = ['true', 'false']
+spark_shuffle_file_buffer = ['64k'] # '32k' 
+spark_shuffle_spill_compress = ['true']  
+spark_io_compression_codec = ['lz4'] # 'snappy', 'lzf', 'lzstd'
+spark_rdd_compress = ['false']
+spark_memory_fraction = ['0.6']
+spark_executor_cores = ['1', '2', '4']
+spark_default_parallelism = ['16', '64', '128', '256']
+spark_locality_wait = ['3s']
+spark_task_cpus = ['1']
+spark_executor_instances = ['2', '4', '8']
+spark_memory_storageFraction = ['0.3', '0.5']
+
 for i in range(noOfSamples):
 	temp = []
 
-	if(vec[i][0]<1.0/3): temp.append(1)
-	elif(vec[i][0]<2.0/3): temp.append(2)
-	else: temp.append(4)
+	# spark.driver.cores
+	get_value(vec, i , 0, spark_driver_cores, temp)
 
-	if(vec[i][1]<1.0/2): temp.append('1g')
-	else: temp.append('2g')
+	# spark.driver.memory
+	get_value(vec, i , 1, spark_driver_memory, temp)
 
-	if(vec[i][2]<1.0/4): temp.append('1g')
-	elif(vec[i][2]<2.0/4): temp.append('2g')
-	elif(vec[i][2]<3.0/4): temp.append('4g')
-	else: temp.append('8g')
+	# spark.executor.memory
+	get_value(vec, i , 2, spark_executor_memory, temp)
+	
+	# spark.reducer.maxSizeInFlight
+	get_value(vec, i , 3, spark_reducer_maxSizeInFlight, temp)
 
-	temp.append('48m')
+	# spark.shuffle.compress
+	get_value(vec, i , 4, spark_shuffle_compress, temp)
 
-	if(vec[i][4]<1.0/2): temp.append('true')
-	else: temp.append('false')
+	# spark.shuffle.file.buffer
+	get_value(vec, i , 5, spark_shuffle_file_buffer, temp)
 
-	if(vec[i][5]<1.0/3): temp.append('32k')
-	elif(vec[i][5]<2.0/3): temp.append('64k')
-	else: temp.append('128k')
+	# spark.shuffle.spill.compress
+	get_value(vec, i , 6, spark_shuffle_spill_compress, temp)
 
-	if(vec[i][6]<1.0/2): temp.append('true')
-	else: temp.append('false')
+	# spark.io.compression.codec
+	get_value(vec, i , 7, spark_io_compression_codec, temp)	
 
-	if(vec[i][7]<1.0/4): temp.append('lz4')
-	elif(vec[i][7]<2.0/4): temp.append('snappy')
-	elif(vec[i][7]<3.0/4): temp.append('lzf')
-	else: temp.append('zstd')
+	# spark.rdd.compress
+	get_value(vec, i , 8, spark_rdd_compress, temp)
 
-	if(vec[i][8]<1.0/2): temp.append('false')
-	else: temp.append('true')
+	# spark.memory.fraction
+	get_value(vec, i , 9, spark_memory_fraction, temp)
 
-	if(vec[i][9]<1.0/3): temp.append(0.4)
-	elif(vec[i][9]<2.0/3): temp.append(0.6)
-	else: temp.append(0.8)
+	# spark.executor.cores
+	get_value(vec, i , 10, spark_executor_cores, temp)
 
-	if(vec[i][10]<1.0/3): temp.append(1)
-	elif(vec[i][10]<2.0/3): temp.append(2)
-	else: temp.append(4)
+	# spark.default.parallelism
+	get_value(vec, i , 11, spark_default_parallelism, temp)
 
-	if(vec[i][11]<1.0/4): temp.append(16)
-	elif(vec[i][11]<2.0/4): temp.append(64)
-	elif(vec[i][11]<3.0/4): temp.append(128)
-	else: temp.append(256)
+	# spark.locality.wait
+	get_value(vec, i , 12, spark_locality_wait, temp)
 
-	temp.append('3s')
+	# spark.task.cpus
+	get_value(vec, i , 13, spark_task_cpus, temp)
 
-	if(vec[i][13]<1.0/2): temp.append(1)
-	else: temp.append(2)
+	# spark.executor.instances
+	get_value(vec, i , 14, spark_executor_instances, temp)
 
-	if(vec[i][14]<1.0/3): temp.append(2)
-	elif(vec[i][14]<2.0/3): temp.append(4)
-	else: temp.append(8)
+	# spark.memory.storageFraction
+	get_value(vec, i , 15, spark_memory_storageFraction, temp)
 
-	if(vec[i][15]<1.0/3): temp.append(0.3)
-	elif(vec[i][15]<2.0/3): temp.append(0.5)
-	else: temp.append(0.7)
 
 	ans.append(temp)
 
@@ -82,3 +98,4 @@ print(ans)
 with open("configs.csv","w+") as my_csv:
     csvWriter = csv.writer(my_csv,delimiter=',')
     csvWriter.writerows(ans)
+
