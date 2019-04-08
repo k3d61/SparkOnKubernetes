@@ -67,7 +67,7 @@ public class MyResource {
         String endFilePath = "HTML/end.html";
         String content = "";
 
-        content += x.date + "<br>";
+        content += "Last Updated : "+x.date + "<br>";
 
 
         Iterator it = x.ALLHosts.entrySet().iterator();
@@ -82,9 +82,9 @@ public class MyResource {
         content = content +
                 "<div class=\"row collection-item\">" +
                 "<div class=\"col s3\">Hostname</div>"+
-                "<div class=\"col s3\">CPU Utilazation </div>"+
+                "<div class=\"col s3\">CPU Utilazation (%)</div>"+
                 "<div class=\"col s3\">Total Memory(MB)</div>"+
-                "<div class=\"col s3\">Used Memory(MB)</div>"+
+                "<div class=\"col s3\">Used Memory(MB)(%)</div>"+
                 "</div>" ;
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
@@ -98,12 +98,14 @@ public class MyResource {
             String MemTotal = values.split("@")[1];
             String MemUsed = values.split("@")[2];
 
+
+            float percentMemoryUsed = (Float.parseFloat(MemUsed) / Float.parseFloat(MemTotal))*100;
             content = content +
                     "<div class=\"row collection-item\">" +
                     "<div class=\"col s3\">"+ hostname+"</div>"+
                     "<div class=\"col s3\">"+ CPUUtilazation +"</div>"+
                     "<div class=\"col s3\">"+ MemTotal +"</div>"+
-                    "<div class=\"col s3\">"+ MemUsed +"</div>"+
+                    "<div class=\"col s3\">"+ MemUsed +"      ("+percentMemoryUsed+"%)" +"</div>"+
                     "</div>" ;
         }
 
